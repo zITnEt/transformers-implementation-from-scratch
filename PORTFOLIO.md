@@ -6,10 +6,12 @@ from first principles in PyTorch, **without** using `transformers`, pre-built
 attention layers, or pre-trained weights.
 
 > **Result:** trains end-to-end on 536,124 English–Russian sentence pairs and
-> produces fluent translations of everyday sentences.
+> translates everyday sentences.
 
-![Translation examples](screenshots/translations.png)
-*<sup>Replace with your screenshot of `inference.translate` output.</sup>*
+```bash
+$ python -m inference.translate "Black cat is on the table."
+на столе чёрная кошка
+```
 
 ---
 
@@ -25,11 +27,17 @@ Every core component is hand-implemented — no high-level NLP libraries:
 - **Training loop** with teacher forcing, label smoothing, gradient clipping, and validation tracking (`training/train.py`)
 - **Greedy autoregressive decoding** for inference (`inference/translate.py`)
 
-![Training run](screenshots/training.png)
-*<sup>GPU training: 21.2M parameters over 536k pairs.</sup>*
+### Training
 
-![Loss curve](loss_curve.png)
-*<sup>Train and validation loss falling over 10 epochs.</sup>*
+Trained for 10 epochs (~95 min on a single GPU). Cross-entropy falls steadily,
+with validation loss tracking training loss — no overfitting:
+
+| Epoch | Train loss | Val loss |
+|------:|-----------:|---------:|
+| 1  | 4.50 | 3.72 |
+| 4  | 3.15 | 3.00 |
+| 7  | 2.91 | 2.84 |
+| 10 | 2.79 | 2.74 |
 
 ---
 
